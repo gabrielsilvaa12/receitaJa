@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945461322590",
+    "project_id": "receitaja-e9b38",
+    "storage_bucket": "receitaja-e9b38.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945461322590:android:295a7de5ea30b69a2ba5cf",
+        "android_client_info": {
+          "package_name": "com.example.receitaja"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdwtu9AOYtnaAjr5tXgY_BUPodbKNLELM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
