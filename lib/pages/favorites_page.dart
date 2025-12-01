@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:receitaja/models/receita.dart';
-import 'package:receitaja/pages/details_page.dart';
-import 'package:receitaja/services/favorites_service.dart';
+import 'package:logo/models/receita.dart';
+import 'package:logo/pages/details_page.dart';
+import 'package:logo/services/favorites_service.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});

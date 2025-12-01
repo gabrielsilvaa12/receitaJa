@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Para ler do banco
-import 'package:receitaja/services/auth_service.dart'; // Para pegar o usuário e sair
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logo/services/auth_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,7 +15,6 @@ class _ProfilePageState extends State<ProfilePage> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
-  // Pegamos o serviço de autenticação
   final AuthService _authService = AuthService();
 
   Future<void> _pickImage(ImageSource source) async {
@@ -63,39 +62,32 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Pega o usuário logado atual
     final user = _authService.currentUser;
 
-    // Se por algum motivo não tiver usuário (bug), mostra login
     if (user == null) {
       return const Center(child: Text("Nenhum usuário logado"));
     }
 
-    // 2. O StreamBuilder fica ouvindo o banco de dados em tempo real
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .snapshots(),
       builder: (context, snapshot) {
-        // Carregando...
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(color: Color(0xFFF26B1D)),
           );
         }
 
-        // Se tiver erro ou não tiver dados
         if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
           return const Center(child: Text("Erro ao carregar perfil."));
         }
 
-        // Pega os dados do documento
         final dados = snapshot.data!.data() as Map<String, dynamic>;
         final nomeUsuario = dados['name'] ?? "Usuário";
         final emailUsuario = dados['email'] ?? user.email;
 
-        // Monta a tela com os dados reais
         return Scaffold(
           body: Center(
             child: Padding(
@@ -103,7 +95,6 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // --- Foto de Perfil ---
                   Stack(
                     children: [
                       Container(
@@ -163,7 +154,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 30),
 
-                  // --- NOME REAL DO BANCO ---
                   Text(
                     nomeUsuario,
                     style: const TextStyle(
@@ -174,7 +164,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 8),
 
-                  // --- EMAIL REAL DO BANCO ---
                   Text(
                     emailUsuario,
                     style: const TextStyle(fontSize: 16, color: Colors.grey),
@@ -182,7 +171,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 40),
 
-                  // --- Cartão de Estatísticas ---
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -215,14 +203,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const Spacer(),
 
-                  // --- BOTÃO DE SAIR (FUNCIONANDO AGORA) ---
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        // 3. Chama o Logout
                         await _authService.logout();
-                        // O AuthGate detecta que saiu e volta pro login sozinho!
                       },
                       icon: const Icon(Icons.logout),
                       label: const Text("Sair da Conta"),

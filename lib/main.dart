@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart'; // Core do Firebase
-import 'package:google_fonts/google_fonts.dart'; // Fontes
-import 'package:receitaja/auth_gate.dart'; // O "Porteiro"
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:logo/auth_gate.dart';
+import 'package:logo/services/notifications_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // INICIALIZAÇÃO MANUAL:
-  // Ele vai procurar os arquivos de configuração nativos automaticamente.
   await Firebase.initializeApp();
+
+  await NotificationService().initNotifications();
 
   runApp(const ReceitaJaApp());
 }

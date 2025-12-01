@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:receitaja/services/auth_service.dart';
+import 'package:logo/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,7 +9,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Novo controlador para o Nome
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -28,21 +27,18 @@ class _LoginPageState extends State<LoginPage> {
     String? error;
 
     if (_isLogin) {
-      // Login (não precisa de nome)
       error = await auth.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
     } else {
-      // Cadastro (precisa de nome)
-      // Validação básica: Nome não pode ser vazio
       if (_nameController.text.trim().isEmpty) {
         error = "Por favor, digite seu nome.";
       } else {
         error = await auth.register(
           _emailController.text.trim(),
           _passwordController.text.trim(),
-          _nameController.text.trim(), // <--- Envia o nome
+          _nameController.text.trim(),
         );
       }
     }
@@ -93,7 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // --- CAMPO DE NOME (Só aparece no cadastro) ---
                       if (!_isLogin) ...[
                         TextField(
                           controller: _nameController,
@@ -108,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 16),
                       ],
 
-                      // Campo Email
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
@@ -121,7 +115,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Campo Senha
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
@@ -149,7 +142,6 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 24),
 
-                      // Botão
                       SizedBox(
                         width: double.infinity,
                         height: 50,

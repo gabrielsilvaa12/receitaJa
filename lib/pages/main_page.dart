@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:receitaja/components/header.dart';
-import 'package:receitaja/components/navbar.dart';
-import 'package:receitaja/pages/favorites_page.dart';
-import 'package:receitaja/pages/home_page.dart';
-import 'package:receitaja/pages/profile_page.dart';
+import 'package:logo/components/header.dart';
+import 'package:logo/components/navbar.dart';
+import 'package:logo/pages/favorites_page.dart';
+import 'package:logo/pages/home_page.dart';
+import 'package:logo/pages/profile_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -25,13 +25,10 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Nosso Header Personalizado (Fixo no topo)
       appBar: Header(),
 
-      // O corpo muda dinamicamente conforme a seleção
       body: _telas[_paginaSelecionada],
 
-      // Nosso NavBar Personalizado (Fixo embaixo)
       bottomNavigationBar: Navbar(
         selectedIndex: _paginaSelecionada,
         onDestinationSelected: (index) {

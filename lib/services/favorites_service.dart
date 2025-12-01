@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:receitaja/models/receita.dart';
+import 'package:logo/models/receita.dart';
+import 'package:logo/services/notifications_service.dart';
 
 class FavoritesService extends ChangeNotifier {
-  // Singleton (Garanta que só existe uma lista no app todo)
   static final FavoritesService instance = FavoritesService._internal();
   factory FavoritesService() => instance;
   FavoritesService._internal();
@@ -11,18 +11,22 @@ class FavoritesService extends ChangeNotifier {
 
   List<Receita> get favorites => _favorites;
 
-  // Adiciona ou Remove
-  void toggleFavorite(Receita Receita) {
-    if (isFavorite(Receita)) {
-      _favorites.removeWhere((r) => r.id == Receita.id);
+  void toggleFavorite(Receita receita) {
+    if (isFavorite(receita)) {
+      _favorites.removeWhere((r) => r.id == receita.id);
     } else {
-      _favorites.add(Receita);
+      _favorites.add(receita);
+
+      // Chama nosso serviço novo
+      NotificationService().showLocalNotification(
+        "Oba! Receita Salva 😋",
+        "Você adicionou '${receita.name}' aos seus favoritos.",
+      );
     }
-    notifyListeners(); // Avisa o app que mudou
+    notifyListeners();
   }
 
-  // Verifica se já é favorito
-  bool isFavorite(Receita Receita) {
-    return _favorites.any((r) => r.id == Receita.id);
+  bool isFavorite(Receita receita) {
+    return _favorites.any((r) => r.id == receita.id);
   }
 }
