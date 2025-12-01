@@ -9,10 +9,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Novo controlador para o Nome
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isLogin = true; // True = Login, False = Cadastro
+  bool _isLogin = true;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -26,18 +28,25 @@ class _LoginPageState extends State<LoginPage> {
     String? error;
 
     if (_isLogin) {
+      // Login (não precisa de nome)
       error = await auth.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
     } else {
-      error = await auth.register(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
+      // Cadastro (precisa de nome)
+      // Validação básica: Nome não pode ser vazio
+      if (_nameController.text.trim().isEmpty) {
+        error = "Por favor, digite seu nome.";
+      } else {
+        error = await auth.register(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+          _nameController.text.trim(), // <--- Envia o nome
+        );
+      }
     }
 
-    // Se der erro, mostra na tela. Se der sucesso, o AuthGate muda a tela sozinho.
     if (mounted) {
       setState(() {
         _isLoading = false;
@@ -49,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2C2C2C), // Fundo Chumbo
+      backgroundColor: const Color(0xFF2C2C2C),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -57,17 +66,15 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
                 SizedBox(
                   height: 100,
                   child: Image.asset(
-                    'assets/images/logo.png',
+                    'assets/images/receitaJa.png',
                     fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(height: 40),
 
-                // Cartão Branco
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -86,7 +93,22 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Email
+                      // --- CAMPO DE NOME (Só aparece no cadastro) ---
+                      if (!_isLogin) ...[
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: "Nome Completo",
+                            prefixIcon: const Icon(Icons.person_outline),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+
+                      // Campo Email
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
@@ -99,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Senha
+                      // Campo Senha
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
@@ -112,7 +134,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      // Erro
                       if (_errorMessage != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
@@ -128,14 +149,14 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 24),
 
-                      // Botão Ação
+                      // Botão
                       SizedBox(
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _submit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF26B1D), // Laranja
+                            backgroundColor: const Color(0xFFF26B1D),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -157,7 +178,6 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 16),
 
-                      // Trocar Modo
                       TextButton(
                         onPressed: () {
                           setState(() {

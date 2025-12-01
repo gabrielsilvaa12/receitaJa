@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Verifica se tem usuário logado em tempo real
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -22,17 +24,27 @@ class AuthService {
   }
 
   // Cadastro
-  Future<String?> register(String email, String password) async {
+  Future<String?> register(String email, String password, String name) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return null; // Sucesso
+      // 1. Cria a conta no Auth (Login/Senha)
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // 2. Pega o ID único que o Firebase gerou (UID)
+      String uid = userCredential.user!.uid;
+
+      // 3. AGORA SIM: Salva os dados no Banco de Dados (Firestore)
+      await _firestore.collection('users').doc(uid).set({
+        'email': email,
+        'name': name,
+        'createdAt': FieldValue.serverTimestamp(), // Data de criação
+      });
+
+      return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
-      return "Erro desconhecido: $e";
+      return "Erro ao salvar no banco: $e";
     }
   }
 
