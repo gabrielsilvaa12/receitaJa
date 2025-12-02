@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _receitasFuture = _service.getReceitas();
+    FavoritesService.instance.startListening();
   }
 
   @override

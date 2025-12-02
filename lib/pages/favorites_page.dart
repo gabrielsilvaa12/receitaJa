@@ -14,7 +14,6 @@ class FavoritesPage extends StatelessWidget {
       body: ListenableBuilder(
         listenable: service,
         builder: (context, _) {
-          // 1. Se a lista estiver vazia
           if (service.favorites.isEmpty) {
             return Center(
               child: Column(
