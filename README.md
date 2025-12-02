@@ -91,4 +91,4 @@ Endpoint utilizado: `https://www.themealdb.com/api/json/v1/1/search.php?s=`
 Este projeto foi desenvolvido para fins de estudo e aprendizado.
 
 ---
-Feito com 🧡 e Flutter.
+Feito por Gabriel Aparecido 😎
